@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS players;
+
+DROP TABLE IF EXISTS missions;
+
+DROP TABLE IF EXISTS demographics;
+
+DROP TABLE IF EXISTS points;
