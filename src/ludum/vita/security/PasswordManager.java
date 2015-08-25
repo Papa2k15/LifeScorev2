@@ -23,15 +23,15 @@ public class PasswordManager {
 	private static PasswordManager passwordConfig;
 	
 	@Deprecated 
-	private ArrayList<Character> passwordEncyptionBuilder;
+	protected ArrayList<Character> passwordEncyptionBuilder;
 	
 	@Deprecated
-	private Random randomizer = new Random();
+	protected Random randomizer = new Random();
 	
 	/**
 	 * Algorithm used by Java's cipher.
 	 */
-	private static final String ALGORITHM = "AES";
+	protected static final String ALGORITHM = "AES";
 	
 	/**
 	 * String representing the key for which all passwords will be 
@@ -40,7 +40,7 @@ public class PasswordManager {
 	 * HAVE BEEN ENCRYPTED WITH THE KEY. THIS WILL LEAVE THEIR KEYS
 	 * USELESS AND UNRETRIEVABLE.
 	 */
-	private static final String PRIVATE_KEY = "S2c0O1rF5EVLiE2g";
+	protected static final String PRIVATE_KEY = "S2c0O1rF5EVLiE2g";
 	
 	/**
 	 * Main cipher that will handle running the appropriate algorithm
@@ -178,6 +178,11 @@ public class PasswordManager {
 			padded = padded.replace("\0", "");
 		}
 		return padded;
+	}
+	
+	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, NoSuchProviderException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException{
+		PasswordManager p = PasswordManager.getPasswordConfiguration();
+		System.out.println(p.decryptPassword("Pm'Ÿ‹Û˜J#“}Ø"));
 	}
 
 }
