@@ -2,12 +2,15 @@ package ludum.vita.dao;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
+
+import javax.crypto.NoSuchPaddingException;
 
 import ludum.vita.beans.PlayerBean;
 import ludum.vita.beans.loaders.PlayerLoader;
@@ -31,7 +34,13 @@ public class PlayerDAO {
 
 		public PlayerDAO(DatabaseFactory factory) {
 			this.factory = factory;
-			p = PasswordManager.getPasswordConfiguration();
+			try {
+				p = PasswordManager.getPasswordConfiguration();
+			} catch (NoSuchAlgorithmException | NoSuchPaddingException
+					| NoSuchProviderException e) {
+				// TODO
+				System.out.println("ERROR WITH PASSWORD MANAGER");
+			}
 		}
 		
 		public long addPlayer(PlayerBean pbean) throws Exception {
@@ -45,7 +54,7 @@ public class PlayerDAO {
 				ps.setString(2, pbean.getFirstName());
 				ps.setString(3, pbean.getLastName());
 				ps.setString(4, pbean.getUserName());
-				ps.setString(5, p.securePassword(pbean.getPassword()));
+				ps.setString(5, p.encryptPassword(pbean.getPassword()));
 				ps.executeUpdate();
 				ps.close();
 				return DatabaseTool.getLastInsert(conn);
@@ -76,7 +85,7 @@ public class PlayerDAO {
 						+ " password = ?, WHERE userName = ?");
 				ps.setString(1, Playerbean.getFirstName());
 				ps.setString(2, Playerbean.getLastName());
-				ps.setString(3, p.securePassword(Playerbean.getPassword()));
+				ps.setString(3, p.encryptPassword(Playerbean.getPassword()));
 				ps.setString(4, Playerbean.getUserName());
 				ps.executeUpdate();
 				ps.close();
