@@ -4,6 +4,7 @@ package ludum.vita.beans;
  * PointsBean is a vital bean that stores all the points for a user.
  * 
  * @author Gregory L. Daniels
+ * @version 1.0
  *
  */
 public class PointsBean {

@@ -15,6 +15,14 @@ import ludum.vita.dbtools.DatabaseTool;
 import ludum.vita.security.PasswordManager;
 
 //TODO 
+/**
+ * The sole purpose of the PlayerDAO is to serve as a single access point
+ * for all players that have successfully registered within the Life Score system.
+ * 
+ * @author Gregory Daniels
+ * @version 1.0
+ *
+ */
 public class PlayerDAO {
 		
 		private DatabaseFactory factory;
@@ -32,13 +40,12 @@ public class PlayerDAO {
 			PreparedStatement ps = null;
 			try {
 				conn = factory.getConnection();
-				ps = conn.prepareStatement("INSERT INTO players (LSUID, firstName, lastName, userName, password, email) VALUES (?,?,?,?,?,?)");
+				ps = conn.prepareStatement("INSERT INTO players (LSUID, firstName, lastName, userName, password) VALUES (?,?,?,?,?)");
 				ps.setString(1, LSUIDGen);
 				ps.setString(2, pbean.getFirstName());
 				ps.setString(3, pbean.getLastName());
 				ps.setString(4, pbean.getUserName());
 				ps.setString(5, p.securePassword(pbean.getPassword()));
-				ps.setString(6, pbean.getEmail());
 				ps.executeUpdate();
 				ps.close();
 				return DatabaseTool.getLastInsert(conn);
@@ -66,12 +73,11 @@ public class PlayerDAO {
 			try {
 				conn = factory.getConnection();
 				ps = conn.prepareStatement("UPDATE players SET firstName = ?, lastName = ?, "
-						+ " password = ?, email = ? WHERE userName = ?");
+						+ " password = ?, WHERE userName = ?");
 				ps.setString(1, Playerbean.getFirstName());
 				ps.setString(2, Playerbean.getLastName());
 				ps.setString(3, p.securePassword(Playerbean.getPassword()));
-				ps.setString(4, Playerbean.getEmail());
-				ps.setString(5, Playerbean.getUserName());
+				ps.setString(4, Playerbean.getUserName());
 				ps.executeUpdate();
 				ps.close();
 			} catch (SQLException e) {

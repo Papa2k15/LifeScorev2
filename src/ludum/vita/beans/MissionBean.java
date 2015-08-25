@@ -13,38 +13,78 @@ import ludum.vita.enums.Priority;
  * A mission is simply a goal that a player plans to complete via
  * the objectives they set forth. 
  * @author Gregory Daniels
- * @version 1.0
+ * @version 2.0
  */
 public class MissionBean {
 
+	/**
+	 * String representation of this mission's unique identification number.
+	 */
 	private String LSMID = "";
 	
+	/**
+	 * String representation of this mission's owner's unique identification number.
+	 */
 	private String LSUID = "";
 	
+	/**
+	 * String representation for the title of this mission.
+	 */
 	private String title = "";
 		
+	/**
+	 * String representation for a short description for this mission.
+	 */
 	private String description = "";
 	
+	/**
+	 * Integer that represents the current progression amount towards this mission's
+	 * goal.
+	 */
 	private int trackerValue = 0;
 	
+	/**
+	 * Integer that represents the goal for this mission.
+	 */
 	private int trackerGoal = 0;
 	
+	/**
+	 * String that represents the units for this mission's goal. 
+	 */
 	private String units = "";
 	
+	/**
+	 * The date for which this mission was created initially.
+	 */
 	private String startDate = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
 	
+	/**
+	 * The date for which this mission's goal has been reached.
+	 */
 	private String endDate = new SimpleDateFormat("MM/dd/yyyy").format(new Date());
 	
+	/**
+	 * Boolean variable that checks to see if this mission has been completed.
+	 */
 	private boolean missionComplete = false;
 
+	/**
+	 * Priority determining to what extreme that this mission needs to be complete.
+	 */
 	private Priority priority = Priority.LOW;
 	
+	/**
+	 * Boolean variable that checks to see if this mission's points have already been earned.
+	 */
 	private boolean pointsEarned = false;
 	
 	/**
-	 * @param LSUID
-	 * @param title
-	 * @param objectives
+	 * Constructor that is used for adding new missions to the database from a 
+	 * player. Player must be logged in before they can add.
+	 * @param LSUID Unique ID for this mission's user.
+	 * @param title String that represents this mission's title.
+	 * @param trackerGoal An integer representation for the overall goal of this mission.
+	 * @param units A string that determines the term of measurement for this mission.
 	 */
 	public MissionBean(String LSUID, String title, int trackerGoal, String units){
 		this.setLSUID(LSUID);
@@ -54,10 +94,13 @@ public class MissionBean {
 	}
 
 	/**
-	 * @param LSMID
-	 * @param LSUID
-	 * @param title
-	 * @param objectives
+	 * Constructor that is used by MissionDAO to load missions. Should never be called 
+	 * via a player.
+	 * @param LSMID Unique ID for this mission.
+	 * @param LSUID Unique ID for this mission's user.
+	 * @param title String that represents this mission's title.
+	 * @param trackerGoal An integer representation for the overall goal of this mission.
+	 * @param units A string that determines the term of measurement for this mission.
 	 */
 	public MissionBean(String LSMID, String LSUID, String title, int trackerGoal, String units){
 		this(LSUID,title,trackerGoal,units);

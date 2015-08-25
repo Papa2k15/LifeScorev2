@@ -1,7 +1,19 @@
 package ludum.vita.security;
 
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Random;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.ShortBufferException;
 
 
 public class PasswordManager {
@@ -45,8 +57,25 @@ public class PasswordManager {
 		return decrypted.replace(decrypted.charAt(decrypted.length()-1), ' ').trim();
 	}
 	
-//	public static void main(String[] args){
-//		PasswordManager p = PasswordManager.getPasswordConfiguration();
-//		System.out.println(p.restorePassword(p.securePassword("#One1605")));
+	public String sPassword(String password) throws NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException {
+		KeyGenerator kg = KeyGenerator.getInstance("Blowfish");
+		kg.init(128);
+		Key key = kg.generateKey();
+		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+		kpg.initialize(1024);
+		KeyPair kp = kpg.genKeyPair();
+		Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+		cipher.init(Cipher.ENCRYPT_MODE, kp.getPublic());
+		return new String(key.getEncoded());
+	}
+	
+//	public String rPassword(String epassword){
+//		
 //	}
+	
+	
+	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, ShortBufferException, BadPaddingException, InvalidKeyException{
+		PasswordManager p = PasswordManager.getPasswordConfiguration();
+		System.out.println(p.sPassword("#One1605"));
+	}
 }

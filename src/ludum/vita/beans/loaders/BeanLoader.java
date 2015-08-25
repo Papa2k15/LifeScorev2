@@ -1,17 +1,10 @@
 package ludum.vita.beans.loaders;
 
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 /**
  * This interface helps enforce the paradigm of what should be contained in a loader.
@@ -28,12 +21,6 @@ public interface BeanLoader<T> {
 	 * @param rs The java.sql.ResultSet we are extracting.
 	 * @return A java.util.List<T> where T is the type for this loader.
 	 * @throws SQLException
-	 * @throws NoSuchPaddingException 
-	 * @throws NoSuchAlgorithmException 
-	 * @throws BadPaddingException 
-	 * @throws IllegalBlockSizeException 
-	 * @throws UnsupportedEncodingException 
-	 * @throws InvalidKeyException 
 	 */
 	public List<T> loadList(ResultSet rs) throws SQLException;
 
@@ -43,12 +30,6 @@ public interface BeanLoader<T> {
 	 * @param rs The java.sql.ResultSet to be loaded.
 	 * @return A Bean of type T containing the loaded information, typically of the first (or next) item in the result set.
 	 * @throws SQLException
-	 * @throws NoSuchPaddingException 
-	 * @throws NoSuchAlgorithmException 
-	 * @throws BadPaddingException 
-	 * @throws IllegalBlockSizeException 
-	 * @throws UnsupportedEncodingException 
-	 * @throws InvalidKeyException 
 	 */
 	public T loadSingle(ResultSet rs) throws SQLException;
 

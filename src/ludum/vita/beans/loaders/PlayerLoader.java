@@ -28,7 +28,6 @@ public class PlayerLoader implements BeanLoader<PlayerBean> {
 						rs.getString("userName"), 
 						p.restorePassword(rs.getString("password")));
 		uBean.setLastName(rs.getString("lastName"));
-		uBean.setEmail(rs.getString("email"));
 		return uBean;
 	}
 
