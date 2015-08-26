@@ -2,16 +2,12 @@ package ludum.vita.dao;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
-
-import javax.crypto.NoSuchPaddingException;
-
 import ludum.vita.beans.PlayerBean;
 import ludum.vita.beans.loaders.PlayerLoader;
 import ludum.vita.dbtools.DatabaseTool;
@@ -32,18 +28,17 @@ public class PlayerDAO {
 		private PasswordManager p;
 		private PlayerLoader playerloader = new PlayerLoader();
 
-		public PlayerDAO(DatabaseFactory factory) {
+		public PlayerDAO(DatabaseFactory factory) throws Exception {
 			this.factory = factory;
 			try {
 				p = PasswordManager.getPasswordConfiguration();
-			} catch (NoSuchAlgorithmException | NoSuchPaddingException
-					| NoSuchProviderException e) {
-				// TODO
-				System.out.println("ERROR WITH PASSWORD MANAGER");
+			} catch (NoSuchAlgorithmException e) {
+				throw new Exception("Password manager issue!");
 			}
 		}
 		
 		public long addPlayer(PlayerBean pbean) throws Exception {
+			if(!checkPlayerName(pbean.getUserName())){
 			String LSUIDGen = getLSUID(pbean);
 			Connection conn = null;
 			PreparedStatement ps = null;
@@ -54,7 +49,7 @@ public class PlayerDAO {
 				ps.setString(2, pbean.getFirstName());
 				ps.setString(3, pbean.getLastName());
 				ps.setString(4, pbean.getUserName());
-				ps.setString(5, p.encryptPassword(pbean.getPassword()));
+				ps.setString(5, p.securePasswordV2(pbean.getPassword()));
 				ps.executeUpdate();
 				ps.close();
 				return DatabaseTool.getLastInsert(conn);
@@ -62,6 +57,9 @@ public class PlayerDAO {
 				throw new Exception("Error connecting to database.");
 			} finally {
 				DatabaseTool.closeConnection(conn, ps);
+			}
+			} else {
+				throw new Exception("Player already exists in database");
 			}
 		}
 		
@@ -82,10 +80,10 @@ public class PlayerDAO {
 			try {
 				conn = factory.getConnection();
 				ps = conn.prepareStatement("UPDATE players SET firstName = ?, lastName = ?, "
-						+ " password = ?, WHERE userName = ?");
+						+ " password = ? WHERE userName = ?");
 				ps.setString(1, Playerbean.getFirstName());
 				ps.setString(2, Playerbean.getLastName());
-				ps.setString(3, p.encryptPassword(Playerbean.getPassword()));
+				ps.setString(3, p.securePasswordV2(Playerbean.getPassword()));
 				ps.setString(4, Playerbean.getUserName());
 				ps.executeUpdate();
 				ps.close();
@@ -153,7 +151,7 @@ public class PlayerDAO {
 			PreparedStatement ps = null;
 			try {
 				conn = factory.getConnection();
-				ps = conn.prepareStatement("SELECT * FROM Players WHERE PlayerName=?");
+				ps = conn.prepareStatement("SELECT * FROM players WHERE userName=?");
 				ps.setString(1, PlayerName);
 				ResultSet rs = ps.executeQuery();
 				boolean check = rs.next();
@@ -187,9 +185,9 @@ public class PlayerDAO {
 		}
 		
 		public void removePlayer(PlayerBean uBean) throws Exception  {
-//			if(!checkPlayerName(uBean.getUserName())){
-//				throw new Exception("Player doesn't exist.");
-//			}
+			if(!checkPlayerName(uBean.getUserName())){
+				throw new Exception("Player doesn't exist.");
+			}
 			Connection conn = null;
 			PreparedStatement ps = null;
 			try {

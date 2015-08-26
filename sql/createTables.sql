@@ -3,7 +3,7 @@ CREATE TABLE players(
 	firstName 		VARCHAR(60),		
 	lastName 		VARCHAR(60),
 	userName		VARCHAR(30),		
-	password		VARCHAR(60),
+	password		VARCHAR(200),
 	email			VARCHAR(100),
 	PRIMARY  KEY (LSUID)
 ) ENGINE=MyISAM; 

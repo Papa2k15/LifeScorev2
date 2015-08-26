@@ -30,7 +30,7 @@ public class DatabaseFactory {
 		return driver.getConnection();
 	}
 
-	public PlayerDAO getPlayerDAO(){
+	public PlayerDAO getPlayerDAO() throws Exception{
 		return new PlayerDAO(this);
 	}
 	
